@@ -57,6 +57,10 @@ class SDK extends SafeEmitter {
                 console.error(err);
             }
         });
+
+        process.on("SIGINT", () => {
+            this.close();
+        });
     }
 
     /**
