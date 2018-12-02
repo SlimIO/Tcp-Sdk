@@ -6,6 +6,10 @@ const uuidv4 = require("uuid/v4");
 const SafeEmitter = require("@slimio/safe-emitter");
 const Observable = require("zen-observable");
 
+// CONSTANTS
+const SOCKET_TIMEOUT_MS = 5000;
+const MESSAGE_TIMEOUT_MS = 5000;
+
 /**
  * @class SDK
  * @classdesc TCP SDK
@@ -13,6 +17,7 @@ const Observable = require("zen-observable");
 class SDK extends SafeEmitter {
     /**
      * @constructor
+     * @memberof SDK#
      * @param {!Number} port
      *
      * @throws {TypeError}
@@ -23,44 +28,34 @@ class SDK extends SafeEmitter {
             throw new TypeError("port must be a number!");
         }
 
+        // Max listeners
+        this.setMaxListeners(100);
+
         // Create TCP Server
         this.client = createConnection({ port });
-        this.isConnected = false;
-        /** @type {Map<String, ZenObservable.SubscriptionObserver<any>>} */
-        this.store = new Map();
-
-        // Listen for events
+        this.client.setTimeout(SOCKET_TIMEOUT_MS);
+        this.client.on("timeout", () => {
+            this.close();
+        });
         this.client.on("error", console.error);
         this.client.on("end", () => {
             // Do nothing
         });
 
+        this.client.on("connect", () => {
+            this.emit("connect");
+        });
+
         this.client.on("data", (buf) => {
             try {
-                const { uuid, error, data, complete } = JSON.parse(buf.toString());
-                if (!this.store.has(uuid)) {
-                    return;
-                }
-
-                const subscriber = this.store.get(uuid);
-                if (error !== null) {
-                    return subscriber.error(error);
-                }
-                if (complete) {
-                    subscriber.complete();
-                }
-                else {
-                    subscriber.next(data);
+                for (const msg of buf.toString().trim().split("\n")) {
+                    const { uuid, ...options } = JSON.parse(msg);
+                    this.emit(uuid, options);
                 }
             }
             catch (err) {
                 console.error(err);
             }
-        });
-
-        this.client.on("connect", () => {
-            this.emit("connect");
-            this.isConnected = true;
         });
     }
 
@@ -75,20 +70,29 @@ class SDK extends SafeEmitter {
     sendMessage(callback, args = []) {
         return new Observable((subscriber) => {
             const uuid = uuidv4();
-            this.store.set(uuid, subscriber);
-
             setImmediate(() => {
-                const msg = { uuid, callback, args };
-                this.client.write(`${JSON.stringify(msg)}\n`);
+                this.client.write(`${JSON.stringify({ uuid, callback, args })}\n`);
+            });
+
+            // Listen for UUID
+            this.on(uuid, ({ error, complete, data }) => {
+                if (error !== null) {
+                    return subscriber.error(new Error(`Message with id ${uuid} timeOut`));
+                }
+
+                if (complete) {
+                    subscriber.complete();
+                }
+                else {
+                    subscriber.next(data);
+                }
             });
 
             const timer = setTimeout(() => {
-                this.store.delete(uuid);
-                subscriber.error(new Error(`Message id ${uuid} timeout!`));
-            }, 5000);
+                this.removeAllListeners(uuid);
+            }, MESSAGE_TIMEOUT_MS);
 
             return () => {
-                this.store.delete(uuid);
                 clearTimeout(timer);
             }
         });
@@ -96,19 +100,14 @@ class SDK extends SafeEmitter {
 
     /**
      * @method close
-     * @desc Close TCP Client connection
+     * @desc Close Agent connection
      * @returns {void}
      */
     close() {
-        if (!this.isConnected) {
+        if (this.client.destroyed) {
             return;
         }
 
-        // Close all subscribers
-        for (const observer of this.store.values()) {
-            observer.complete();
-        }
-        this.isConnected = false;
         this.client.end();
     }
 }
