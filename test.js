@@ -1,5 +1,8 @@
 const TCP_SDK = require("./index");
 
+// NAMESPACE
+const events = require("./namespace/events");
+
 // CONSTANTS
 const RECONNECT_TIMEOUT_MS = 1000;
 const SLIMIO_DEFAULT_PORT = 1337;
@@ -18,16 +21,8 @@ async function main() {
         Agent.close();
     });
 
-    Agent.sendMessage("events.get_info").subscribe({
-        next(data) {
-            console.log(data);
-        },
-        error(err) {
-            console.error(err);
-        },
-        complete() {
-            console.log("completed!");
-        }
-    });
+    const evt = events(Agent);
+    const info = await evt.getInfo();
+    console.log(info);
 }
 main().catch(console.error);
