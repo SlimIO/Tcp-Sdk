@@ -18,7 +18,7 @@ class SDK extends SafeEmitter {
     /**
      * @constructor
      * @memberof SDK#
-     * @param {!Number} port
+     * @param {!Number} port agent port
      *
      * @throws {TypeError}
      */
@@ -63,8 +63,8 @@ class SDK extends SafeEmitter {
      * @method sendMessage
      * @desc Send a message
      * @memberof SDK#
-     * @param {!String} callback
-     * @param {*} args
+     * @param {!String} callback target
+     * @param {*} args message arguments
      * @returns {ZenObservable.ObservableLike<any>}
      */
     sendMessage(callback, args = []) {
@@ -80,12 +80,7 @@ class SDK extends SafeEmitter {
                     return subscriber.error(new Error(`Message with id ${uuid} timeOut`));
                 }
 
-                if (complete) {
-                    subscriber.complete();
-                }
-                else {
-                    subscriber.next(data);
-                }
+                return complete ? subscriber.complete() : subscriber.next(data);
             });
 
             const timer = setTimeout(() => {
@@ -94,7 +89,7 @@ class SDK extends SafeEmitter {
 
             return () => {
                 clearTimeout(timer);
-            }
+            };
         });
     }
 
