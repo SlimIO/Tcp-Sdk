@@ -6,18 +6,21 @@ const uuidv4 = require("uuid/v4");
 const SafeEmitter = require("@slimio/safe-emitter");
 const Observable = require("zen-observable");
 
+// Require Internal Dependencies
+const namespaces = require("./namespace");
+
 // CONSTANTS
 const SOCKET_TIMEOUT_MS = 5000;
 const MESSAGE_TIMEOUT_MS = 5000;
 
 /**
- * @class SDK
+ * @class TcpSdk
  * @classdesc TCP SDK
  */
-class SDK extends SafeEmitter {
+class TcpSdk extends SafeEmitter {
     /**
      * @constructor
-     * @memberof SDK#
+     * @memberof TcpSdk#
      * @param {!Number} port agent port
      *
      * @throws {TypeError}
@@ -66,7 +69,7 @@ class SDK extends SafeEmitter {
     /**
      * @method sendMessage
      * @desc Send a message
-     * @memberof SDK#
+     * @memberof TcpSdk#
      * @param {!String} callback target
      * @param {*} args message arguments
      * @returns {ZenObservable.ObservableLike<any>}
@@ -100,6 +103,7 @@ class SDK extends SafeEmitter {
     /**
      * @method close
      * @desc Close Agent connection
+     * @memberof TcpSdk#
      * @returns {void}
      */
     close() {
@@ -111,4 +115,4 @@ class SDK extends SafeEmitter {
     }
 }
 
-module.exports = SDK;
+module.exports = { TcpSdk, namespaces };
