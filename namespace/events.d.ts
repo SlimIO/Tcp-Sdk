@@ -16,7 +16,7 @@ declare namespace Events {
     };
 }
 
-function Events(agent: any): Events.Callbacks;
+function Events(agent: TcpSdk): Events.Callbacks;
 
 export as namespace Events;
 export = Events;

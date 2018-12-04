@@ -115,4 +115,6 @@ class TcpSdk extends SafeEmitter {
     }
 }
 
-module.exports = { TcpSdk, namespaces };
+TcpSdk.namespaces = namespaces;
+
+module.exports = TcpSdk;
