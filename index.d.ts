@@ -4,11 +4,11 @@
 
 import * as SafeEmitter from "@slimio/safe-emitter";
 
-declare namespace TcpSdk {
+declare namespace TcpClient {
 
 }
 
-declare class TcpSdk extends SafeEmitter {
+declare class TcpClient extends SafeEmitter {
     constructor(port: number);
 
     public client: NodeJS.Socket;
@@ -17,5 +17,5 @@ declare class TcpSdk extends SafeEmitter {
     close(): void;
 }
 
-export as namespace TcpSdk;
-export = TcpSdk;
+export as namespace TcpClient;
+export = TcpClient;

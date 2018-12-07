@@ -14,13 +14,13 @@ const SOCKET_TIMEOUT_MS = 5000;
 const MESSAGE_TIMEOUT_MS = 5000;
 
 /**
- * @class TcpSdk
+ * @class TcpClient
  * @classdesc TCP SDK
  */
-class TcpSdk extends SafeEmitter {
+class TcpClient extends SafeEmitter {
     /**
      * @constructor
-     * @memberof TcpSdk#
+     * @memberof TcpClient#
      * @param {!Number} port agent port
      *
      * @throws {TypeError}
@@ -69,7 +69,7 @@ class TcpSdk extends SafeEmitter {
     /**
      * @method sendMessage
      * @desc Send a message
-     * @memberof TcpSdk#
+     * @memberof TcpClient#
      * @param {!String} callback target
      * @param {*} args message arguments
      * @returns {ZenObservable.ObservableLike<any>}
@@ -103,7 +103,7 @@ class TcpSdk extends SafeEmitter {
     /**
      * @method close
      * @desc Close Agent connection
-     * @memberof TcpSdk#
+     * @memberof TcpClient#
      * @returns {void}
      */
     close() {
@@ -115,6 +115,6 @@ class TcpSdk extends SafeEmitter {
     }
 }
 
-TcpSdk.namespaces = namespaces;
+TcpClient.namespaces = namespaces;
 
-module.exports = TcpSdk;
+module.exports = TcpClient;

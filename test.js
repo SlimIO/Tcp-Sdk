@@ -1,4 +1,4 @@
-const TCP_SDK = require("./index");
+const TcpClient = require("./index");
 
 // NAMESPACE
 const events = require("./namespace/events");
@@ -13,7 +13,7 @@ const SLIMIO_DEFAULT_PORT = 1337;
  * @returns {Promise<void>}
  */
 async function main() {
-    const Agent = new TCP_SDK(SLIMIO_DEFAULT_PORT);
+    const Agent = new TcpClient(SLIMIO_DEFAULT_PORT);
     await Agent.once("connect", CONNECT_TIMEOUT_MS);
     console.log("Connected to the SlimIO Agent!");
 
