@@ -5,12 +5,15 @@
 import * as SafeEmitter from "@slimio/safe-emitter";
 
 declare namespace TcpClient {
-
+    interface DefaultModules {
+        events: any
+    }
 }
 
 declare class TcpClient extends SafeEmitter {
     constructor(port: number);
 
+    public static modules: TcpClient.DefaultModules;
     public client: NodeJS.Socket;
 
     sendMessage(callbackName: string, args?: any): ZenObservable.ObservableLike<any>;

@@ -1,7 +1,6 @@
 const TcpClient = require("./index");
 
-// NAMESPACE
-const events = require("./namespace/events");
+const { events } = TcpClient.namespaces;
 
 // CONSTANTS
 const CONNECT_TIMEOUT_MS = 1000;

@@ -7,7 +7,7 @@ const SafeEmitter = require("@slimio/safe-emitter");
 const Observable = require("zen-observable");
 
 // Require Internal Dependencies
-const namespaces = require("./namespace");
+const modules = require("./namespace");
 
 // CONSTANTS
 const SOCKET_TIMEOUT_MS = 5000;
@@ -115,6 +115,6 @@ class TcpClient extends SafeEmitter {
     }
 }
 
-TcpClient.namespaces = namespaces;
+TcpClient.modules = modules;
 
 module.exports = TcpClient;
