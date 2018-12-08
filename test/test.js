@@ -1,4 +1,4 @@
-const TcpClient = require("./index");
+const TcpClient = require("../index");
 
 const { events } = TcpClient.modules;
 

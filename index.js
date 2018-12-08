@@ -7,7 +7,7 @@ const SafeEmitter = require("@slimio/safe-emitter");
 const Observable = require("zen-observable");
 
 // Require Internal Dependencies
-const modules = require("./namespace");
+const modules = require("./modules");
 
 // CONSTANTS
 const SOCKET_TIMEOUT_MS = 5000;
