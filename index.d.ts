@@ -4,9 +4,29 @@
 
 import * as SafeEmitter from "@slimio/safe-emitter";
 
+// Require modules
+import * as Evt from "./modules/events";
+
 declare namespace TcpClient {
+    interface GetInfo {
+        uid: string;
+        name: string;
+        version: string;
+        containerVersion: string;
+        started: boolean;
+        callbacksDescriptor: string;
+        callbacks: string[];
+    }
+
+    interface NativeCallbacks {
+        start(): Promise<void>,
+        stop(): Promise<void>,
+        healthCheck(): Promise<void>,
+        getInfo(): Promise<GetInfo>
+    };
+
     interface DefaultModules {
-        events: any
+        events: (agent: TcpClient) => Evt.Callbacks
     }
 }
 
