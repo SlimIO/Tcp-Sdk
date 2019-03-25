@@ -1,8 +1,8 @@
 // Require Node.js Dependencies
 const { createConnection } = require("net");
+const { randomBytes } = require("crypto");
 
 // Require Third-party Dependencies
-const uuidv4 = require("uuid/v4");
 const SafeEmitter = require("@slimio/safe-emitter");
 const Observable = require("zen-observable");
 
@@ -76,7 +76,7 @@ class TcpClient extends SafeEmitter {
      */
     sendMessage(callback, args = []) {
         return new Observable((subscriber) => {
-            const uuid = uuidv4();
+            const uuid = randomBytes(16).toString();
             setImmediate(() => {
                 this.client.write(`${JSON.stringify({ uuid, callback, args })}\n`);
             });
