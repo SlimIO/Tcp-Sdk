@@ -21,11 +21,11 @@ class TcpClient extends SafeEmitter {
     /**
      * @constructor
      * @memberof TcpClient#
-     * @param {!Number} port agent port
+     * @param {Number} [port=1337] agent port
      *
      * @throws {TypeError}
      */
-    constructor(port) {
+    constructor(port = TcpClient.DEFAULT_PORT) {
         super();
         if (typeof port !== "number") {
             throw new TypeError("port must be a number!");
@@ -115,6 +115,8 @@ class TcpClient extends SafeEmitter {
     }
 }
 
+TcpClient.DEFAULT_PORT = 1337;
 TcpClient.modules = modules;
+Object.preventExtensions(TcpClient);
 
 module.exports = TcpClient;

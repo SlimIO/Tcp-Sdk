@@ -33,6 +33,7 @@ declare namespace TcpClient {
 declare class TcpClient extends SafeEmitter {
     constructor(port: number);
 
+    public static DEFAULT_PORT: number;
     public static modules: TcpClient.DefaultModules;
     public client: NodeJS.Socket;
 
