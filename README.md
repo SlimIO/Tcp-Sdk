@@ -33,5 +33,22 @@ async function main() {
 }
 ```
 
+## API
+
+<details><summary>constructor(port: number)</summary>
+
+Create and instanciate a new TCP Connection to the socket server with `port`. Listen for event **connection** to known when you'r ready to send messages.
+</details>
+
+<details><summary>sendMessage< T >(callbackName: string, args?: any[]): ZenObservable.ObservableLike< T ></summary>
+
+send a callback message.
+</details>
+
+<details><summary>close(): void</summary>
+
+Close the TCP (Socket) connection.
+</details>
+
 ## License
 MIT

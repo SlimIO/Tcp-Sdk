@@ -37,7 +37,7 @@ declare class TcpClient extends SafeEmitter {
     public static modules: TcpClient.DefaultModules;
     public client: NodeJS.Socket;
 
-    sendMessage(callbackName: string, args?: any): ZenObservable.ObservableLike<any>;
+    sendMessage<T>(callbackName: string, args?: any[]): ZenObservable.ObservableLike<T>;
     close(): void;
 }
 
