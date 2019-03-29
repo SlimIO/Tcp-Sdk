@@ -38,6 +38,13 @@ async function main() {
 <details><summary>constructor(port: number)</summary>
 
 Create and instanciate a new TCP Connection to the socket server with `port`. Listen for event **connection** to known when you'r ready to send messages.
+
+Default value of port would be **TcpClient.DEFAULT_PORT**.
+</details>
+
+<details><summary>getActiveAddons(): Promise< String[] ></summary>
+
+Return the list of active addons on the current agent.
 </details>
 
 <details><summary>sendMessage< T >(callbackName: string, args?: any[]): ZenObservable.ObservableLike< T ></summary>
@@ -48,6 +55,19 @@ send a callback message.
 <details><summary>close(): void</summary>
 
 Close the TCP (Socket) connection.
+</details>
+
+### Properties
+
+<details><summary>readonly agent(): TcpClient.AgentInfo | null</summary>
+
+The readonly getter is described by the following TypeScript interface:
+```ts
+interface AgentInfo {
+    location: string;
+    version: string;
+}
+```
 </details>
 
 ## License
