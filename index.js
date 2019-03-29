@@ -13,6 +13,9 @@ const modules = require("./modules");
 const SOCKET_TIMEOUT_MS = 5000;
 const MESSAGE_TIMEOUT_MS = 5000;
 
+// Symbols
+const symAgent = Symbol("agent");
+
 /**
  * @class TcpClient
  * @classdesc TCP SDK
@@ -45,7 +48,14 @@ class TcpClient extends SafeEmitter {
             // Do nothing
         });
 
-        this.client.on("connect", () => {
+        this.client.on("connect", async() => {
+            const ret = await new Promise((resolve, reject) => {
+                this.sendMessage("agent.global_info").subscribe(resolve, reject);
+            });
+            this[symAgent] = {
+                version: ret.coreVersion,
+                location: ret.root
+            };
             this.emit("connect");
         });
 
@@ -61,9 +71,35 @@ class TcpClient extends SafeEmitter {
             }
         });
 
-        process.on("SIGINT", () => {
-            this.close();
+        process.on("SIGINT", () => this.close());
+        Reflect.defineProperty(this, symAgent, { value: null, writable: true });
+    }
+
+    /**
+     * @memberof TcpClient#
+     * @member {any} agent
+     */
+    get agent() {
+        return this[symAgent];
+    }
+
+    /**
+     * @async
+     * @method getActiveAddons
+     * @desc Return the list of active addons
+     * @memberof TcpClient#
+     * @returns {Promise<String[]>}
+     */
+    async getActiveAddons() {
+        if (this.client.connecting) {
+            return [];
+        }
+
+        const addons = await new Promise((resolve, reject) => {
+            this.sendMessage("agent.list_addons").subscribe(resolve, reject);
         });
+
+        return addons;
     }
 
     /**

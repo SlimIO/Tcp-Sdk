@@ -18,6 +18,11 @@ declare namespace TcpClient {
         callbacks: string[];
     }
 
+    interface AgentInfo {
+        location: string;
+        version: string;
+    }
+
     interface NativeCallbacks {
         start(): Promise<void>,
         stop(): Promise<void>,
@@ -33,10 +38,12 @@ declare namespace TcpClient {
 declare class TcpClient extends SafeEmitter {
     constructor(port: number);
 
+    public readonly agent(): TcpClient.AgentInfo | null;
     public static DEFAULT_PORT: number;
     public static modules: TcpClient.DefaultModules;
     public client: NodeJS.Socket;
 
+    getActiveAddons(): Promise<String[]>;
     sendMessage<T>(callbackName: string, args?: any[]): ZenObservable.ObservableLike<T>;
     close(): void;
 }
