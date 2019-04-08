@@ -35,9 +35,17 @@ async function main() {
 
 ## API
 
-<details><summary>constructor(port: number)</summary>
+<details><summary>constructor(options?: TcpClient.ConstructorOptions)</summary>
 
-Create and instanciate a new TCP Connection to the socket server with `port`. Listen for event **connection** to known when you'r ready to send messages.
+Create and instanciate a new TCP Connection to the socket server. Listen for event **connection** to known when you'r ready to send messages.
+
+Options is described by the following interface:
+```ts
+interface ConstructorOptions {
+    host?: string;
+    port?: number;
+}
+```
 
 Default value of port would be **TcpClient.DEFAULT_PORT**.
 </details>
@@ -45,6 +53,11 @@ Default value of port would be **TcpClient.DEFAULT_PORT**.
 <details><summary>getActiveAddons(): Promise< String[] ></summary>
 
 Return the list of active addons on the current agent.
+</details>
+
+<details><summary>ping(): Promise< void ></summary>
+
+Send a ping event (avoid timeout).
 </details>
 
 <details><summary>sendMessage< T >(callbackName: string, args?: any[]): ZenObservable.ObservableLike< T ></summary>
