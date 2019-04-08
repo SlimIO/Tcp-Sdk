@@ -55,7 +55,7 @@ class TcpClient extends SafeEmitter {
         });
         this.client.on("error", console.error);
         this.client.on("end", () => {
-            // Do nothing
+            this.emit("end");
         });
 
         this.client.on("connect", async() => {
