@@ -65,6 +65,11 @@ Send a ping event (avoid timeout).
 send a callback message.
 </details>
 
+<details><summary>connect(): Promise< void ></summary>
+
+Connect (or re-connect) the Net.socket. If the Socket is alive it will return.
+</details>
+
 <details><summary>close(): void</summary>
 
 Close the TCP (Socket) connection.

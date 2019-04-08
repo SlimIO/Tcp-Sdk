@@ -47,9 +47,12 @@ declare class TcpClient extends SafeEmitter {
     public static DEFAULT_PORT: number;
     public static modules: TcpClient.DefaultModules;
     public client: NodeJS.Socket;
+    public host: string;
+    public port: string;
 
     getActiveAddons(): Promise<String[]>;
     ping(): Promise<void>;
+    connect(): Promise<void>;
     sendMessage<T>(callbackName: string, args?: any[]): ZenObservable.ObservableLike<T>;
     close(): void;
 }

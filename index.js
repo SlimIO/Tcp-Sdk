@@ -12,6 +12,7 @@ const modules = require("./src");
 // CONSTANTS
 const SOCKET_TIMEOUT_MS = 30000;
 const MESSAGE_TIMEOUT_MS = 5000;
+const RECONNECT_TIMEOUT_MS = 1000;
 
 // Symbols
 const symAgent = Symbol("agent");
@@ -41,7 +42,9 @@ class TcpClient extends SafeEmitter {
         }
 
         // Max listeners
-        this.setMaxListeners(100);
+        this.setMaxListeners(20);
+        this.port = port;
+        this.host = host;
 
         // Create TCP Server
         this.client = createConnection({ port, host });
@@ -97,6 +100,27 @@ class TcpClient extends SafeEmitter {
             version: ret.coreVersion,
             location: ret.root
         };
+    }
+
+    /**
+     * @async
+     * @method connect
+     * @memberof TcpClient#
+     * @param {Number} [timeOut=1000] timeOut
+     * @returns {Promise<void>}
+     *
+     * @throws {TypeError}
+     */
+    async connect(timeOut = RECONNECT_TIMEOUT_MS) {
+        if (typeof timeOut !== "number") {
+            throw new TypeError("timeOut must be a number");
+        }
+        if (!this.client.destroyed) {
+            return;
+        }
+
+        this.client.connect(this.port, this.host);
+        await this.once("connect", timeOut);
     }
 
     /**
