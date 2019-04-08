@@ -4,7 +4,7 @@
 import * as SafeEmitter from "@slimio/safe-emitter";
 
 // Require modules
-import * as Evt from "./modules/events";
+import * as Evt from "./src/events";
 
 declare namespace TcpClient {
     interface GetInfo {
