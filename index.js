@@ -10,7 +10,7 @@ const Observable = require("zen-observable");
 const modules = require("./src");
 
 // CONSTANTS
-const SOCKET_TIMEOUT_MS = 5000;
+const SOCKET_TIMEOUT_MS = 30000;
 const MESSAGE_TIMEOUT_MS = 5000;
 
 // Symbols
@@ -49,13 +49,7 @@ class TcpClient extends SafeEmitter {
         });
 
         this.client.on("connect", async() => {
-            const ret = await new Promise((resolve, reject) => {
-                this.sendMessage("agent.global_info").subscribe(resolve, reject);
-            });
-            this[symAgent] = {
-                version: ret.coreVersion,
-                location: ret.root
-            };
+            await this.ping();
             this.emit("connect");
         });
 
@@ -81,6 +75,22 @@ class TcpClient extends SafeEmitter {
      */
     get agent() {
         return this[symAgent];
+    }
+
+    /**
+     * @async
+     * @method ping
+     * @memberof TcpClient#
+     * @returns {Promise<void>}
+     */
+    async ping() {
+        const ret = await new Promise((resolve, reject) => {
+            this.sendMessage("agent.global_info").subscribe(resolve, reject);
+        });
+        this[symAgent] = {
+            version: ret.coreVersion,
+            location: ret.root
+        };
     }
 
     /**

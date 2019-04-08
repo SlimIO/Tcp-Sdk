@@ -43,6 +43,7 @@ declare class TcpClient extends SafeEmitter {
     public client: NodeJS.Socket;
 
     getActiveAddons(): Promise<String[]>;
+    ping(): Promise<void>;
     sendMessage<T>(callbackName: string, args?: any[]): ZenObservable.ObservableLike<T>;
     close(): void;
 }
