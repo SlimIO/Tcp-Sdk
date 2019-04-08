@@ -12,10 +12,6 @@ const modules = require("./src");
 // CONSTANTS
 const SOCKET_TIMEOUT_MS = 30000;
 const MESSAGE_TIMEOUT_MS = 5000;
-const DEFAULT_OPTIONS = {
-    port: TcpClient.DEFAULT_PORT,
-    host: "localhost"
-};
 
 // Symbols
 const symAgent = Symbol("agent");
@@ -36,7 +32,7 @@ class TcpClient extends SafeEmitter {
      */
     constructor(options = Object.create(null)) {
         super();
-        const { port, host } = Object.assign({}, DEFAULT_OPTIONS, options);
+        const { port, host } = Object.assign({}, TcpClient.DEFAULT_OPTIONS, options);
         if (typeof port !== "number") {
             throw new TypeError("port must be a number!");
         }
@@ -173,6 +169,10 @@ class TcpClient extends SafeEmitter {
 
 TcpClient.DEFAULT_PORT = 1337;
 TcpClient.modules = modules;
+TcpClient.DEFAULT_OPTIONS = {
+    port: TcpClient.DEFAULT_PORT,
+    host: "localhost"
+};
 Object.preventExtensions(TcpClient);
 
 module.exports = TcpClient;
