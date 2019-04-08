@@ -1,4 +1,3 @@
-/// <reference types="@types/node" />
 /// <reference types="@types/zen-observable" />
 /// <reference types="@slimio/safe-emitter" />
 
@@ -38,7 +37,7 @@ declare namespace TcpClient {
 declare class TcpClient extends SafeEmitter {
     constructor(port: number);
 
-    public readonly agent(): TcpClient.AgentInfo | null;
+    public readonly agent: TcpClient.AgentInfo | null;
     public static DEFAULT_PORT: number;
     public static modules: TcpClient.DefaultModules;
     public client: NodeJS.Socket;
