@@ -1,3 +1,4 @@
+/// <reference types="@types/node" />
 /// <reference types="@types/zen-observable" />
 /// <reference types="@slimio/safe-emitter" />
 
@@ -7,6 +8,11 @@ import * as SafeEmitter from "@slimio/safe-emitter";
 import * as Evt from "./src/events";
 
 declare namespace TcpClient {
+    interface ConstructorOptions {
+        host?: string;
+        port?: number;
+    }
+
     interface GetInfo {
         uid: string;
         name: string;
@@ -35,7 +41,7 @@ declare namespace TcpClient {
 }
 
 declare class TcpClient extends SafeEmitter {
-    constructor(port: number);
+    constructor(options?: TcpClient.ConstructorOptions);
 
     public readonly agent: TcpClient.AgentInfo | null;
     public static DEFAULT_PORT: number;
