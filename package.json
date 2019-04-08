@@ -25,7 +25,7 @@
     },
     "homepage": "https://github.com/SlimIO/TCP-SDK#readme",
     "dependencies": {
-        "@slimio/safe-emitter": "^1.0.3",
+        "@slimio/safe-emitter": "^1.0.6",
         "zen-observable": "^0.8.11"
     },
     "devDependencies": {
