@@ -94,7 +94,7 @@ class TcpClient extends SafeEmitter {
      */
     async ping() {
         const ret = await new Promise((resolve, reject) => {
-            this.sendMessage("agent.global_info").subscribe(resolve, reject);
+            this.sendMessage("gate.global_info").subscribe(resolve, reject);
         });
         this[symAgent] = {
             version: ret.coreVersion,
@@ -136,7 +136,7 @@ class TcpClient extends SafeEmitter {
         }
 
         const addons = await new Promise((resolve, reject) => {
-            this.sendMessage("agent.list_addons").subscribe(resolve, reject);
+            this.sendMessage("gate.list_addons").subscribe(resolve, reject);
         });
 
         return addons;
