@@ -147,7 +147,7 @@ class TcpClient extends SafeEmitter {
      * @desc Send a message
      * @memberof TcpClient#
      * @param {!String} callback target
-     * @param {*} args message arguments
+     * @param {any[]} [args] message arguments
      * @returns {ZenObservable.ObservableLike<any>}
      */
     sendMessage(callback, args = []) {
@@ -173,6 +173,20 @@ class TcpClient extends SafeEmitter {
             return () => {
                 clearTimeout(timer);
             };
+        });
+    }
+
+    /**
+     * @method sendOne
+     * @desc Send a message wrapped with a Promise
+     * @memberof TcpClient#
+     * @param {!String} target target
+     * @param {any} [args] message arguments
+     * @returns {Promise<any>}
+     */
+    sendOne(target, args = []) {
+        return new Promise((resolve, reject) => {
+            this.sendMessage(target, Array.isArray(args) ? args : [args]).subscribe(resolve, reject);
         });
     }
 

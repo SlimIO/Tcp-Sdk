@@ -60,9 +60,14 @@ Return the list of active addons on the current agent.
 Send a ping event (avoid timeout).
 </details>
 
-<details><summary>sendMessage< T >(callbackName: string, args?: any[]): ZenObservable.ObservableLike< T ></summary>
+<details><summary>sendMessage(target: string, args?: any[]): ZenObservable.ObservableLike< any ></summary>
 
 send a callback message.
+</details>
+
+<details><summary>sendOne< T >(target: string, args?: any[]): Promise< any ></summary>
+
+send a callback message wrapped by a Promise.
 </details>
 
 <details><summary>connect(): Promise< void ></summary>

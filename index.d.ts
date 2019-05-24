@@ -53,7 +53,8 @@ declare class TcpClient extends SafeEmitter {
     getActiveAddons(): Promise<String[]>;
     ping(): Promise<void>;
     connect(): Promise<void>;
-    sendMessage<T>(callbackName: string, args?: any[]): ZenObservable.ObservableLike<T>;
+    sendMessage(target: string, args?: any[]): ZenObservable.ObservableLike<any>;
+    sendOne(target: string, args: any): Promise<any>;
     close(): void;
 }
 
