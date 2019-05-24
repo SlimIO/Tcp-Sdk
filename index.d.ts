@@ -1,4 +1,3 @@
-/// <reference types="@types/node" />
 /// <reference types="@types/zen-observable" />
 /// <reference types="@slimio/safe-emitter" />
 
