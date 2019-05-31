@@ -93,5 +93,12 @@ interface AgentInfo {
 ```
 </details>
 
+## Dependencies
+
+|Name|Refactoring|Security Risk|Usage|
+|---|---|---|---|
+|[@slimio/safe-emitter](https://github.com/SlimIO/safeEmitter#readme)|Minor|Medium|Node.js Safe Emitter|
+|[zen-observable](https://github.com/zenparsing/zen-observable)|Minor|Low|Observable Implementation|
+
 ## License
 MIT
