@@ -1,25 +1,66 @@
+// Require Node.js Dependencies
+const { join } = require("path");
+const { access } = require("fs").promises;
+const { spawn } = require("child_process");
+
+// Require Third-party Dependencies
+const avaTest = require("ava");
+const commands = require("@slimio/cli");
+const del = require("del");
+const is = require("@slimio/is");
+
+// Require Internal Dependencies
 const TcpClient = require("../index");
 
-const { events } = TcpClient.modules;
+// Globals
+let cp = null;
+const agentDir = join(__dirname, "..", "agent");
 
-// CONSTANTS
-const CONNECT_TIMEOUT_MS = 1000;
-const SLIMIO_DEFAULT_PORT = 1337;
+avaTest.before("Clone SlimIO Agent", async(assert) => {
+    try {
+        await access(agentDir);
+        await del([agentDir]);
+    }
+    catch (err) {
+        // Ignore
+    }
 
-/**
- * @async
- * @func main
- * @returns {Promise<void>}
- */
-async function main() {
-    const Agent = new TcpClient({
-        port: SLIMIO_DEFAULT_PORT
+    await commands.initAgent("agent");
+    cp = spawn(process.argv[0], [join(agentDir, "index.js"), "--silent"], {
+        stdio: "inherit"
     });
-    await Agent.once("connect", CONNECT_TIMEOUT_MS);
-    console.log("Connected to the SlimIO Agent!");
+    cp.on("error", (err) => console.error(err));
 
-    const evt = events(Agent);
-    const info = await evt.getInfo();
-    console.log(info);
-}
-main().catch(console.error);
+    // Wait a little bit (else the agent will not be yet started).
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    assert.pass();
+});
+
+avaTest.after("Cleanup Agent", async(assert) => {
+    if (cp !== null) {
+        cp.kill();
+    }
+    await del([agentDir]);
+});
+
+avaTest("pull information from gate", async(assert) => {
+    const client = new TcpClient();
+    const add1 = await client.getActiveAddons();
+    assert.deepEqual(add1, []);
+    await client.once("connect", 1000);
+
+    const info = await client.sendOne("gate.global_info");
+    assert.deepEqual(Object.keys(info), ["root", "silent", "coreVersion"]);
+    assert.is(info.root, agentDir);
+    assert.is(info.silent, true);
+    assert.true(typeof info.coreVersion === "string");
+
+    const addons = await client.sendOne("gate.list_addons");
+    assert.deepEqual(addons, ["alerting", "events", "gate", "socket"]);
+
+    const add2 = await client.getActiveAddons();
+    assert.deepEqual(add2, ["alerting", "events", "gate", "socket"]);
+
+    client.close();
+    assert.pass();
+});
