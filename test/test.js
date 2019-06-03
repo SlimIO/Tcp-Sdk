@@ -43,6 +43,31 @@ avaTest.after("Cleanup Agent", async(assert) => {
     await del([agentDir]);
 });
 
+avaTest("constructor errors", (assert) => {
+    assert.throws(() => {
+        new TcpClient({ port: "1337" });
+    }, { instanceOf: TypeError, message: "port must be a number!" });
+
+    assert.throws(() => {
+        new TcpClient({ host: 10 });
+    }, { instanceOf: TypeError, message: "host must be a string!" });
+});
+
+avaTest("default agent must be null", async(assert) => {
+    const client = new TcpClient();
+    assert.is(client.port, TcpClient.DEFAULT_PORT);
+    assert.is(client.host, "localhost");
+    assert.is(client.agent, null);
+
+    await client.once("connect", 1000);
+    const agent = client.agent;
+    assert.deepEqual(Object.keys(agent), ["version", "location"]);
+    assert.true(typeof agent.version === "string");
+    assert.is(agent.location, agentDir);
+
+    client.close();
+});
+
 avaTest("pull information from gate", async(assert) => {
     const client = new TcpClient();
     const add1 = await client.getActiveAddons();
@@ -62,5 +87,5 @@ avaTest("pull information from gate", async(assert) => {
     assert.deepEqual(add2, ["alerting", "events", "gate", "socket"]);
 
     client.close();
-    assert.pass();
+    // assert.true(client.client.destroyed);
 });
