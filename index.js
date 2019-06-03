@@ -6,9 +6,6 @@ const { randomBytes } = require("crypto");
 const SafeEmitter = require("@slimio/safe-emitter");
 const Observable = require("zen-observable");
 
-// Require Internal Dependencies
-const modules = require("./src");
-
 // CONSTANTS
 const SOCKET_TIMEOUT_MS = 30000;
 const MESSAGE_TIMEOUT_MS = 5000;
@@ -206,7 +203,6 @@ class TcpClient extends SafeEmitter {
 }
 
 TcpClient.DEFAULT_PORT = 1337;
-TcpClient.modules = modules;
 TcpClient.DEFAULT_OPTIONS = {
     port: TcpClient.DEFAULT_PORT,
     host: "localhost"
