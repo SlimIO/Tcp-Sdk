@@ -67,10 +67,12 @@ class TcpClient extends SafeEmitter {
                 }
             }
             catch (err) {
+                /* istanbul ignore next */
                 console.error(err);
             }
         });
 
+        /* istanbul ignore next */
         process.on("SIGINT", () => this.close());
         Reflect.defineProperty(this, symAgent, { value: null, writable: true });
     }
@@ -113,11 +115,13 @@ class TcpClient extends SafeEmitter {
             throw new TypeError("timeOut must be a number");
         }
         if (!this.client.destroyed) {
-            return;
+            return false;
         }
 
         this.client.connect(this.port, this.host);
         await this.once("connect", timeOut);
+
+        return true;
     }
 
     /**
@@ -195,10 +199,12 @@ class TcpClient extends SafeEmitter {
      */
     close() {
         if (this.client.destroyed) {
-            return;
+            return false;
         }
 
         this.client.end();
+
+        return true;
     }
 }
 

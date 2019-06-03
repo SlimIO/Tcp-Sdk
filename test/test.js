@@ -68,6 +68,27 @@ avaTest("default agent must be null", async(assert) => {
     client.close();
 });
 
+avaTest("connect/deconnect", async(assert) => {
+    const client = new TcpClient();
+    assert.true(client.client.connecting);
+    await client.once("connect", 1000);
+    assert.false(client.client.connecting);
+
+    assert.true(client.close());
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    assert.false(client.close());
+    assert.true(client.client.destroyed);
+
+    await assert.throwsAsync(client.connect("1337"), { instanceOf: TypeError, message: "timeOut must be a number" });
+    const ret = await client.connect();
+    assert.true(ret);
+    assert.false(client.client.connecting);
+    assert.false(client.client.destroyed);
+    assert.false(await client.connect());
+
+    client.close();
+});
+
 avaTest("pull information from gate", async(assert) => {
     const client = new TcpClient();
     const add1 = await client.getActiveAddons();
