@@ -155,7 +155,7 @@ class TcpClient extends SafeEmitter {
         return new Observable((subscriber) => {
             const uuid = randomBytes(16).toString();
             setImmediate(() => {
-                this.client.write(`${JSON.stringify({ uuid, callback, args })}\n`);
+                this.client.write(`${JSON.stringify({ uuid, callback, args })}\0`);
             });
 
             // Listen for UUID
