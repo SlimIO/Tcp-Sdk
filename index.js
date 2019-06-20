@@ -10,6 +10,7 @@ const uuidv4 = require("uuid/v4");
 const SOCKET_TIMEOUT_MS = 30000;
 const MESSAGE_TIMEOUT_MS = 5000;
 const RECONNECT_TIMEOUT_MS = 1000;
+const NULL_CHAR = "\0".charCodeAt(0);
 
 // Symbols
 const symAgent = Symbol("agent");
@@ -46,13 +47,9 @@ class TcpClient extends SafeEmitter {
         // Create TCP Server
         this.client = createConnection({ port, host });
         this.client.setTimeout(SOCKET_TIMEOUT_MS);
-        this.client.on("timeout", () => {
-            this.close();
-        });
+        this.client.on("timeout", () => this.close());
         this.client.on("error", console.error);
-        this.client.on("end", () => {
-            this.emit("end");
-        });
+        this.client.on("end", () => this.emit("end"));
 
         this.client.on("connect", async() => {
             await this.ping();
@@ -60,10 +57,29 @@ class TcpClient extends SafeEmitter {
         });
 
         this.client.on("data", (buf) => {
+            let tempBuf = [];
             try {
-                for (const msg of buf.toString().trim().split("\n")) {
-                    const { uuid, ...options } = JSON.parse(msg);
-                    this.emit(uuid, options);
+                let offset = 0;
+                let index;
+
+                while ((index = buf.indexOf(NULL_CHAR, offset)) !== -1) {
+                    tempBuf.push(buf.slice(offset, index));
+                    offset = index + 1;
+
+                    const str = Buffer.concat(tempBuf).toString();
+                    tempBuf = [];
+
+                    try {
+                        const { uuid, ...options } = JSON.parse(str);
+                        this.emit(uuid, options);
+                    }
+                    catch (err) {
+                        console.log("failed to parse JSON:\n", str);
+                    }
+                }
+
+                if (offset < buf.length) {
+                    tempBuf.push(buf.slice(offset));
                 }
             }
             catch (err) {
@@ -92,9 +108,7 @@ class TcpClient extends SafeEmitter {
      * @returns {Promise<void>}
      */
     async ping() {
-        const ret = await new Promise((resolve, reject) => {
-            this.sendMessage("gate.global_info").subscribe(resolve, reject);
-        });
+        const ret = await this.sendOne("gate.global_info");
         this[symAgent] = {
             version: ret.coreVersion,
             location: ret.root
@@ -167,9 +181,7 @@ class TcpClient extends SafeEmitter {
                 return complete ? subscriber.complete() : subscriber.next(data);
             });
 
-            const timer = setTimeout(() => {
-                this.removeAllListeners(uuid);
-            }, MESSAGE_TIMEOUT_MS);
+            const timer = setTimeout(() => this.removeAllListeners(uuid), MESSAGE_TIMEOUT_MS);
 
             return () => {
                 clearTimeout(timer);
