@@ -1,6 +1,6 @@
 {
     "name": "@slimio/tcp-sdk",
-    "version": "0.4.3",
+    "version": "0.4.4",
     "description": "SlimIO TCP Socket SDK",
     "main": "index.js",
     "scripts": {
