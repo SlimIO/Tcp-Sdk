@@ -184,6 +184,7 @@ class TcpClient extends SafeEmitter {
             const timer = setTimeout(() => this.removeAllListeners(uuid), MESSAGE_TIMEOUT_MS);
 
             return () => {
+                this.removeAllListeners(uuid);
                 clearTimeout(timer);
             };
         });
