@@ -33,6 +33,7 @@
         "@commitlint/cli": "^8.0.0",
         "@commitlint/config-conventional": "^8.0.0",
         "@escommunity/minami": "^1.0.0",
+        "@slimio/cli": "^0.2.2",
         "@slimio/eslint-config": "^2.0.4",
         "@slimio/is": "^1.5.1",
         "@types/zen-observable": "^0.8.0",
