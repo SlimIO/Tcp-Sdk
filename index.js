@@ -175,7 +175,7 @@ class TcpClient extends SafeEmitter {
             // Listen for UUID
             this.on(uuid, ({ error, complete, data }) => {
                 if (error !== null) {
-                    return subscriber.error(new Error(`Message with id ${uuid} timeOut`));
+                    return subscriber.error(error);
                 }
 
                 return complete ? subscriber.complete() : subscriber.next(data);
