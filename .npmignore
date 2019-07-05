@@ -16,3 +16,4 @@ commitlint.config.js
 .travis.yml
 tsconfig.json
 CHANGELOG.md
+agent/
