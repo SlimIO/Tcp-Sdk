@@ -25,7 +25,7 @@ avaTest.before("Clone SlimIO Agent", async(assert) => {
         // Ignore
     }
 
-    await commands.initAgent("agent");
+    await commands.initAgent("agent", { verbose: false });
     cp = spawn(process.argv[0], [join(agentDir, "index.js"), "--silent"], {
         stdio: "inherit"
     });
