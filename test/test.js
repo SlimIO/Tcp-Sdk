@@ -6,8 +6,7 @@ const { spawn } = require("child_process");
 // Require Third-party Dependencies
 const avaTest = require("ava");
 const commands = require("@slimio/cli");
-const del = require("del");
-const is = require("@slimio/is");
+const premove = require("premove");
 
 // Require Internal Dependencies
 const TcpClient = require("../index");
@@ -19,7 +18,7 @@ const agentDir = join(__dirname, "..", "agent");
 avaTest.before("Clone SlimIO Agent", async(assert) => {
     try {
         await access(agentDir);
-        await del([agentDir]);
+        await premove(agentDir);
     }
     catch (err) {
         // Ignore
@@ -40,7 +39,9 @@ avaTest.after("Cleanup Agent", async(assert) => {
     if (cp !== null) {
         cp.kill();
     }
-    await del([agentDir]);
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    await premove(agentDir);
 });
 
 avaTest("constructor errors", (assert) => {
