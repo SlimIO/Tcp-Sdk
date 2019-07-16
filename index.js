@@ -1,3 +1,5 @@
+"use strict";
+
 // Require Node.js Dependencies
 const { createConnection } = require("net");
 
@@ -21,11 +23,11 @@ const symAgent = Symbol("agent");
  */
 class TcpClient extends SafeEmitter {
     /**
-     * @constructor
+     * @class
      * @memberof TcpClient#
-     * @param {Object} [options] options
-     * @param {Number} [options.port=1337] agent port
-     * @param {String} [options.host=localhost] agent host
+     * @param {object} [options] options
+     * @param {number} [options.port=1337] agent port
+     * @param {string} [options.host=localhost] agent host
      *
      * @throws {TypeError}
      */
@@ -96,6 +98,7 @@ class TcpClient extends SafeEmitter {
     /**
      * @memberof TcpClient#
      * @member {any} agent
+     * @returns {any}
      */
     get agent() {
         return this[symAgent];
@@ -103,7 +106,7 @@ class TcpClient extends SafeEmitter {
 
     /**
      * @async
-     * @method ping
+     * @function ping
      * @memberof TcpClient#
      * @returns {Promise<void>}
      */
@@ -117,9 +120,9 @@ class TcpClient extends SafeEmitter {
 
     /**
      * @async
-     * @method connect
+     * @function connect
      * @memberof TcpClient#
-     * @param {Number} [timeOut=1000] timeOut
+     * @param {number} [timeOut=1000] timeOut
      * @returns {Promise<void>}
      *
      * @throws {TypeError}
@@ -140,10 +143,10 @@ class TcpClient extends SafeEmitter {
 
     /**
      * @async
-     * @method getActiveAddons
-     * @desc Return the list of active addons
+     * @function getActiveAddons
+     * @description Return the list of active addons
      * @memberof TcpClient#
-     * @returns {Promise<String[]>}
+     * @returns {Promise<string[]>}
      */
     async getActiveAddons() {
         if (this.client.connecting) {
@@ -158,10 +161,10 @@ class TcpClient extends SafeEmitter {
     }
 
     /**
-     * @method sendMessage
-     * @desc Send a message
+     * @function sendMessage
+     * @description Send a message
      * @memberof TcpClient#
-     * @param {!String} callback target
+     * @param {!string} callback target
      * @param {any[]} [args] message arguments
      * @returns {ZenObservable.ObservableLike<any>}
      */
@@ -191,10 +194,10 @@ class TcpClient extends SafeEmitter {
     }
 
     /**
-     * @method sendOne
-     * @desc Send a message wrapped with a Promise
+     * @function sendOne
+     * @description Send a message wrapped with a Promise
      * @memberof TcpClient#
-     * @param {!String} target target
+     * @param {!string} target target
      * @param {any} [args] message arguments
      * @returns {Promise<any>}
      */
@@ -205,8 +208,8 @@ class TcpClient extends SafeEmitter {
     }
 
     /**
-     * @method close
-     * @desc Close Agent connection
+     * @function close
+     * @description Close Agent connection
      * @memberof TcpClient#
      * @returns {void}
      */
