@@ -30,7 +30,7 @@
         "zen-observable": "^0.8.14"
     },
     "devDependencies": {
-        "@commitlint/cli": "^8.0.0",
+        "@commitlint/cli": "^8.1.0",
         "@commitlint/config-conventional": "^8.0.0",
         "@escommunity/minami": "^1.0.0",
         "@slimio/cli": "^0.2.6",
