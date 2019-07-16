@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "prepublishOnly": "pkg-ok",
-        "test": "ava --verbose",
+        "test": "cross-env psp && ava --verbose",
         "doc": "jsdoc -c ./jsdoc.json -r -R ./README.md -P ./package.json --verbose",
         "coverage": "nyc npm test",
         "report": "nyc report --reporter=html"
@@ -36,6 +36,7 @@
         "@slimio/cli": "^0.2.6",
         "@slimio/eslint-config": "^3.0.2",
         "@slimio/is": "^1.5.1",
+        "@slimio/psp": "^0.5.4",
         "@types/zen-observable": "^0.8.0",
         "ava": "^2.2.0",
         "cross-env": "^5.2.0",
@@ -51,6 +52,7 @@
     },
     "husky": {
         "hooks": {
+            "pre-push": "cross-env eslint index.js && npm test",
             "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
         }
     },
