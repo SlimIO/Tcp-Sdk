@@ -34,7 +34,7 @@
         "@commitlint/config-conventional": "^8.1.0",
         "@escommunity/minami": "^1.0.0",
         "@slimio/cli": "^0.2.6",
-        "@slimio/eslint-config": "^2.0.4",
+        "@slimio/eslint-config": "^3.0.2",
         "@slimio/is": "^1.5.1",
         "@types/zen-observable": "^0.8.0",
         "ava": "^2.2.0",
