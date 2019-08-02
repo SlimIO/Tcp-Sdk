@@ -16,7 +16,13 @@
     },
     "keywords": [
         "SlimIO",
-        "monitoring"
+        "monitoring",
+        "tcp",
+        "ip",
+        "socket",
+        "sdk",
+        "communication",
+        "callback"
     ],
     "files": [
         "index.js",
