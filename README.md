@@ -98,6 +98,7 @@ interface AgentInfo {
 |Name|Refactoring|Security Risk|Usage|
 |---|---|---|---|
 |[@slimio/safe-emitter](https://github.com/SlimIO/safeEmitter#readme)|Minor|Medium|Node.js Safe Emitter|
+|[uuid](https://github.com/kelektiv/node-uuid#readme)|Minor|Low|Generate Unique ID|
 |[zen-observable](https://github.com/zenparsing/zen-observable)|Minor|Low|Observable Implementation|
 
 ## License
