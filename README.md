@@ -24,13 +24,12 @@ async function main() {
     const client = new TcpSdk();
     await client.once("connect", CONNECT_TIMEOUT_MS);
 
-    const info = await new Promise((resolve, reject) => {
-        client.sendMessage("cpu.get_info").subscribe(resolve, reject);
-    });
+    const info = await client.sendOne("cpu.get_info");
     console.log(info);
 
     client.close();
 }
+main().catch(console.error);
 ```
 
 ## API
