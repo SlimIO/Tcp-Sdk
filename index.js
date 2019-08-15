@@ -13,6 +13,7 @@ const SOCKET_TIMEOUT_MS = 30000;
 const MESSAGE_TIMEOUT_MS = 5000;
 const RECONNECT_TIMEOUT_MS = 1000;
 const NULL_CHAR = "\0".charCodeAt(0);
+const BUF_WATERMARK = 32 * 1024;
 
 // Symbols
 const symAgent = Symbol("agent");
@@ -45,6 +46,7 @@ class TcpClient extends SafeEmitter {
         this.setMaxListeners(20);
         this.port = port;
         this.host = host;
+        this.tempBuf = [];
 
         // Create TCP Server
         this.client = createConnection({ port, host });
@@ -59,13 +61,12 @@ class TcpClient extends SafeEmitter {
         });
 
         this.client.on("data", (buf) => {
-            let tempBuf = [];
             try {
                 let offset = 0;
                 let index;
 
                 while ((index = buf.indexOf(NULL_CHAR, offset)) !== -1) {
-                    tempBuf.push(buf.slice(offset, index));
+                    this.tempBuf.push(buf.slice(offset, index));
                     offset = index + 1;
 
                     const str = Buffer.concat(tempBuf).toString();
@@ -81,7 +82,12 @@ class TcpClient extends SafeEmitter {
                 }
 
                 if (offset < buf.length) {
-                    tempBuf.push(buf.slice(offset));
+                    this.tempBuf.push(buf.slice(offset));
+                    const len = this.tempBuf.reduce((prev, curr) => prev + curr.length, 0);
+                    if (len > BUF_WATERMARK) {
+                        this.tempBuf = [];
+                        this.client.end();
+                    }
                 }
             }
             catch (err) {
@@ -169,11 +175,14 @@ class TcpClient extends SafeEmitter {
      * @returns {ZenObservable.ObservableLike<any>}
      */
     sendMessage(callback, args = []) {
+        const uuid = uuidv4();
+        const msg = Buffer.from(`${JSON.stringify({ uuid, callback, args })}\0`);
+        if (msg.length > BUF_WATERMARK) {
+            throw new Error(`Maximum buffer length of '${BUF_WATERMARK}' exceeded.`);
+        }
+
         return new Observable((subscriber) => {
-            const uuid = uuidv4();
-            setImmediate(() => {
-                this.client.write(`${JSON.stringify({ uuid, callback, args })}\0`);
-            });
+            setImmediate(() => this.client.write(msg));
 
             // Listen for UUID
             this.on(uuid, ({ error, complete, data }) => {
