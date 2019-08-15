@@ -69,8 +69,8 @@ class TcpClient extends SafeEmitter {
                     this.tempBuf.push(buf.slice(offset, index));
                     offset = index + 1;
 
-                    const str = Buffer.concat(tempBuf).toString();
-                    tempBuf = [];
+                    const str = Buffer.concat(this.tempBuf).toString();
+                    this.tempBuf = [];
 
                     try {
                         const { uuid, ...options } = JSON.parse(str);
