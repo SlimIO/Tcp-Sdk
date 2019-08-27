@@ -2,18 +2,55 @@
 const { join } = require("path");
 const { access } = require("fs").promises;
 const { spawn } = require("child_process");
+const { promisify } = require("util");
+const { strictEqual } = require("assert").strict;
 
 // Require Third-party Dependencies
 const avaTest = require("ava");
 const commands = require("@slimio/cli");
 const premove = require("premove");
+const FuzzBuzz = require("fuzzbuzz");
 
 // Require Internal Dependencies
 const TcpClient = require("../index");
 
 // Globals
 let cp = null;
+const sleep = promisify(setTimeout);
 const agentDir = join(__dirname, "..", "agent");
+
+async function runFuzz(nbOperations = 250) {
+    const client = new TcpClient();
+    await client.once("connect", 1000);
+
+    const activeAddons = await client.getActiveAddons();
+    console.log(activeAddons);
+
+    const fuzz = new FuzzBuzz();
+    console.log("fuzz random seed is", fuzz.seed);
+
+    fuzz.add(5, async function () {
+        const randomAddon = activeAddons[Math.floor(Math.random() * activeAddons.length)];
+        const info = await client.sendOne(`${randomAddon}.get_info`);
+        strictEqual(info.name, randomAddon);
+        strictEqual(typeof info.version, "string");
+        strictEqual(info.started, true);
+
+        await sleep(10);
+    });
+
+    fuzz.add(1, async function () {
+        const globalInfo = await client.sendOne("gate.global_info");
+        strictEqual(typeof globalInfo.root, "string");
+        strictEqual(globalInfo.silent, true);
+        strictEqual(typeof globalInfo.coreVersion, "string");
+
+        await sleep(10);
+    });
+
+    await fuzz.run(nbOperations);
+    client.close();
+}
 
 avaTest.before("Clone SlimIO Agent", async(assert) => {
     try {
@@ -97,7 +134,7 @@ avaTest("pull information from gate", async(assert) => {
     await client.once("connect", 1000);
 
     const info = await client.sendOne("gate.global_info");
-    assert.deepEqual(Object.keys(info), ["root", "silent", "coreVersion"]);
+    assert.deepEqual(Object.keys(info).sort(), ["root", "silent", "coreVersion", "versions"].sort());
     assert.is(info.root, agentDir);
     assert.is(info.silent, true);
     assert.true(typeof info.coreVersion === "string");
@@ -109,5 +146,9 @@ avaTest("pull information from gate", async(assert) => {
     assert.deepEqual(add2, ["alerting", "events", "gate", "socket"]);
 
     client.close();
-    // assert.true(client.client.destroyed);
+});
+
+avaTest("run fuzz tests", async(assert) => {
+    await runFuzz();
+    assert.pass();
 });
