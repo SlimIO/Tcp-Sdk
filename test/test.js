@@ -131,11 +131,16 @@ avaTest("pull information from gate", async(assert) => {
     assert.is(info.silent, true);
     assert.true(typeof info.coreVersion === "string");
 
+    const compareList = [...installer.CONSTANTS.BUILT_IN_ADDONS].map((name) => name.toLowerCase());
+    compareList.sort();
+
     const addons = await client.sendOne("gate.list_addons");
-    assert.deepEqual(addons, ["alerting", "events", "gate", "socket"]);
+    addons.sort();
+    assert.deepEqual(addons, compareList);
 
     const add2 = await client.getActiveAddons();
-    assert.deepEqual(add2, ["alerting", "events", "gate", "socket"]);
+    add2.sort();
+    assert.deepEqual(add2, compareList);
 
     client.close();
 });
