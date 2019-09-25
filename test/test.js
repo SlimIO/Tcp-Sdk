@@ -1,15 +1,14 @@
 // Require Node.js Dependencies
 const { join } = require("path");
-const { access } = require("fs").promises;
-const { spawn } = require("child_process");
 const { promisify } = require("util");
 const { strictEqual } = require("assert").strict;
 
 // Require Third-party Dependencies
 const avaTest = require("ava");
-const commands = require("@slimio/cli");
+const installer = require("@slimio/installer");
 const premove = require("premove");
 const FuzzBuzz = require("fuzzbuzz");
+const treekill = require("tree-kill");
 
 // Require Internal Dependencies
 const TcpClient = require("../index");
@@ -53,31 +52,24 @@ async function runFuzz(nbOperations = 250) {
 }
 
 avaTest.before("Clone SlimIO Agent", async(assert) => {
+    assert.plan(1);
+
     try {
-        await access(agentDir);
-        await premove(agentDir);
+        await installer.initAgent(join(__dirname, ".."), {
+            name: "agent"
+        });
+        cp = await installer.runAgent(agentDir, true);
+        assert.true(cp !== null);
     }
     catch (err) {
-        // Ignore
+        await premove(agentDir);
     }
-
-    await commands.initAgent("agent", { verbose: false });
-    cp = spawn(process.argv[0], [join(agentDir, "index.js"), "--silent"], {
-        stdio: "inherit"
-    });
-    cp.on("error", (err) => console.error(err));
-
-    // Wait a little bit (else the agent will not be yet started).
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    assert.pass();
 });
 
 avaTest.after("Cleanup Agent", async(assert) => {
-    if (cp !== null) {
-        cp.kill();
-    }
+    treekill(cp.pid);
 
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await sleep(100);
     await premove(agentDir);
 });
 
