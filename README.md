@@ -5,6 +5,7 @@
 ![dep](https://img.shields.io/david/SlimIO/Tcp-Sdk)
 ![size](https://img.shields.io/github/languages/code-size/SlimIO/Tcp-Sdk)
 [![Known Vulnerabilities](https://snyk.io//test/github/SlimIO/Tcp-Sdk/badge.svg?targetFile=package.json)](https://snyk.io//test/github/SlimIO/Tcp-Sdk?targetFile=package.json)
+[![Build Status](https://travis-ci.com/SlimIO/Tcp-Sdk.svg?branch=master)](https://travis-ci.com/SlimIO/Tcp-Sdk)
 
 SlimIO TCP Socket SDK. This package has been created to help developer to communicate with the product (Require the [Socket](https://github.com/SlimIO/Socket) Addon on the SlimIO agent you want to communicate to).
 
