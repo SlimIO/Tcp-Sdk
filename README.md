@@ -6,7 +6,11 @@
 ![size](https://img.shields.io/github/languages/code-size/SlimIO/Tcp-Sdk)
 [![Known Vulnerabilities](https://snyk.io//test/github/SlimIO/Tcp-Sdk/badge.svg?targetFile=package.json)](https://snyk.io//test/github/SlimIO/Tcp-Sdk?targetFile=package.json)
 
-SlimIO TCP Socket SDK. This package has been created to help developer to communicate with the production (Socket addon).
+SlimIO TCP Socket SDK. This package has been created to help developer to communicate with the product (Require the [Socket](https://github.com/SlimIO/Socket) Addon on the SlimIO agent you want to communicate to).
+
+<p align="center">
+<img src="https://i.imgur.com/hXT8ZB1.png">
+</p>
 
 ## Requirements
 - [Node.js](https://nodejs.org/en/) v12 or higher
@@ -31,10 +35,13 @@ async function main() {
     const client = new TcpSdk();
     await client.once("connect", CONNECT_TIMEOUT_MS);
 
-    const info = await client.sendOne("cpu.get_info");
-    console.log(info);
-
-    client.close();
+    try {
+        const info = await client.sendOne("cpu.status");
+        console.log(info);
+    }
+    finally {
+        client.close();
+    }
 }
 main().catch(console.error);
 ```
