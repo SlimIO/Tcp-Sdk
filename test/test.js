@@ -30,7 +30,7 @@ async function runFuzz(nbOperations = 250) {
 
     fuzz.add(5, async function () {
         const randomAddon = activeAddons[Math.floor(Math.random() * activeAddons.length)];
-        const info = await client.sendOne(`${randomAddon}.get_info`);
+        const info = await client.sendOne(`${randomAddon}.status`);
         strictEqual(info.name, randomAddon);
         strictEqual(typeof info.version, "string");
         strictEqual(info.started, true);
