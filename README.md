@@ -13,6 +13,8 @@ SlimIO TCP Socket SDK. This package has been created to help developer to commun
 <img src="https://i.imgur.com/hXT8ZB1.png">
 </p>
 
+> ⚠️ TCP SDK will automatically search and request informations from the built-in [Gate](https://github.com/SlimIO/Gate) addon.
+
 ## Requirements
 - [Node.js](https://nodejs.org/en/) v12 or higher
 
