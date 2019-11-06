@@ -60,7 +60,7 @@
         "tree-kill": "^1.2.1"
     },
     "engines": {
-        "node": ">=10"
+        "node": ">=12"
     },
     "husky": {
         "hooks": {

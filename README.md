@@ -9,7 +9,7 @@
 SlimIO TCP Socket SDK. This package has been created to help developer to communicate with the production (Socket addon).
 
 ## Requirements
-- [Node.js](https://nodejs.org/en/) v10 or higher
+- [Node.js](https://nodejs.org/en/) v12 or higher
 
 ## Getting Started
 
