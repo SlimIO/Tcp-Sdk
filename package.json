@@ -37,7 +37,7 @@
     "dependencies": {
         "@slimio/safe-emitter": "^1.1.0",
         "uuid": "^3.4.0",
-        "zen-observable": "^0.8.14"
+        "zen-observable": "^0.8.15"
     },
     "devDependencies": {
         "@commitlint/cli": "^8.3.5",
