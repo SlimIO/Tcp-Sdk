@@ -58,6 +58,7 @@ avaTest.before("Clone SlimIO Agent", async(assert) => {
         await installer.initAgent(join(__dirname, ".."), {
             name: "agent"
         });
+
         cp = await installer.runAgent(agentDir, true);
         assert.true(cp !== null);
     }
