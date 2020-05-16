@@ -6,7 +6,7 @@ const { createConnection } = require("net");
 // Require Third-party Dependencies
 const SafeEmitter = require("@slimio/safe-emitter");
 const Observable = require("zen-observable");
-const uuidv4 = require("uuid/v4");
+const uuidv4 = require("@lukeed/uuid");
 
 // CONSTANTS
 const SOCKET_TIMEOUT_MS = 30000;
